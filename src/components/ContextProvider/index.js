@@ -1,15 +1,16 @@
-import React, { useState, useContext, Children } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
-import { clearSection, getSession } from '../../helpers'
+import { apiClient, clearSection, getSession } from '../../helpers'
 import AppContext from '../../context'
 
 var scopes = 'user-read-private user-read-email';
 
 function ContextProvider({ children }) {
 
-    const [ session, setSession ] = useState( getSession() )
-
     let history = useHistory();
+
+    const [ session, setSession ] = useState( getSession() )
+    const [ state, setState ] = useState({ loading: true, playlists: null })
 
     function login() {
         const { REACT_APP_HOST, REACT_APP_SPOTIFY_APP_ID } = process.env
@@ -22,9 +23,25 @@ function ContextProvider({ children }) {
         setSession(null)
         history.push('/login')
     }
+
+    function getLists(){
+
+        apiClient
+            .get('/browse/featured-playlists')
+            .then(({ data })=>{
+                console.log(data)
+                   setState({ loading: false, playlists: data.playlists })
+            })
+    }
     
+    useEffect(()=>{
+        getLists()
+    }, [ state.loading ])
+
+    console.log(state)
+
   return (
-    <AppContext.Provider value={{ session, logout, login }}>
+    <AppContext.Provider value={{ state, session, logout, login, setState, getLists }}>
          { children }
     </AppContext.Provider>
   );

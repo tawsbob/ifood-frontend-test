@@ -21,8 +21,8 @@ function App() {
       <Router>
         <Switch>
           <AppContextProvider>
-          { WithContext(Home, '/') }
-          { WithContext(Login, '/Login') }
+            { WithContext(Home, '/') }
+            { WithContext(Login, '/Login') }
           </AppContextProvider>
         </Switch>
       </Router>

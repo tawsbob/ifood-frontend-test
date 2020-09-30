@@ -2,6 +2,21 @@
     border:1px solid #ffffff;
     border-radius:16px;
     padding:40px;
-    max-width: 500px;
+    max-width: 450px;
     margin:150px auto 0;
+    text-align:center;
+}
+
+.login-container .logo {
+    width: 100px;
+    display: block;
+    margin:0 auto;
+    background-color: var(--main-color);
+    padding:15px;
+}
+
+.login-container .button {
+    display: block;
+    margin-top:20px;
+    width: 100%;
 }

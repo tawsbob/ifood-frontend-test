@@ -8,7 +8,7 @@ function LogoutButton() {
   const Context = useContext(AppContext)
 
   return (
-    <button className="button-logout" onClick={Context.logout}>
+    <button className="button-logout" title="logout" onClick={Context.logout}>
         <img src={icon} alt="Logo" />
     </button>
   );

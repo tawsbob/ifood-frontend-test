@@ -1,0 +1,45 @@
+.list-component {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.playlist {
+    position:relative;
+    margin-bottom:20px;
+}
+.playlist .thumb {
+    display: block;
+    max-width: 300px;   
+}
+
+.playlist .content {
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding:10px;
+    box-sizing: border-box;
+    opacity: 0;
+    transition: opacity .35s ease-in-out;
+}
+
+.playlist:hover .content {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.playlist .content .title {
+    margin:0 0 10px;
+    color: var(--main-color);
+}
+
+.playlist .content p {
+    margin:0;
+}
