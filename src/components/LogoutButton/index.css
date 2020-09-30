@@ -1,0 +1,10 @@
+.button-logout {
+    padding:20px;
+    background-color:var(--main-color);
+    border:0;
+    border-radius:16px;
+}
+
+.button-logout img {
+    width: 25px;
+}
