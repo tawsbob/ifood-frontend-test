@@ -1,20 +1,14 @@
-import React from 'react';
-import { useHistory } from "react-router-dom";
-import { clearSection } from '../../helpers'
+import React, { useContext } from 'react';
 import icon from './icon.svg';
+import AppContext from '../../context';
 import './index.css';
 
 function LogoutButton() {
+  
+  const Context = useContext(AppContext)
 
-    let history = useHistory();
-
-    function click(){
-        clearSection()
-        history.push('/login')
-    }
-    
   return (
-    <button className="button-logout" onClick={click}>
+    <button className="button-logout" onClick={Context.logout}>
         <img src={icon} alt="Logo" />
     </button>
   );

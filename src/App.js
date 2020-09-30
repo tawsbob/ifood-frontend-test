@@ -1,6 +1,7 @@
 import React from 'react';
 import Home from './pages/Home'
 import Login from './pages/Login'
+import AppContextProvider from './components/ContextProvider'
 
 import {
   BrowserRouter as Router,
@@ -8,18 +9,24 @@ import {
   Route
 } from "react-router-dom";
 
+const WithContext = ( Comp, path )=> {
+  return (
+      <Route exact path={path}>
+          <Comp />
+      </Route>
+  )
+}
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/">
-          <Home />
-        </Route>
-        <Route exact path="/login">
-          <Login />
-        </Route>
-      </Switch>
-    </Router>
+      <Router>
+        <Switch>
+          <AppContextProvider>
+          { WithContext(Home, '/') }
+          { WithContext(Login, '/Login') }
+          </AppContextProvider>
+        </Switch>
+      </Router>
+
   );
 }
 

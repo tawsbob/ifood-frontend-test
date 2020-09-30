@@ -17,9 +17,13 @@ function checkSession(){
     return (userSection && userSection.code && typeof userSection.code === 'string')
 }
 
-function getFromUser(key = 'code'){
+function getSession(key){
     const s = getLocalJson(sectionKey)
-    return (s && s[key]) ? s[key] : null 
+    if(key){
+        return (s && s[key]) ? s[key] : null 
+    }
+    return s
+    
 }
 
 function clearSection(){
@@ -31,7 +35,7 @@ function getToken( code ){
 
     const params = new URLSearchParams();
     params.append('grant_type', 'authorization_code');
-    params.append('code', code || getFromUser());
+    params.append('code', code || getSession('code'));
     params.append('redirect_uri', REACT_APP_HOST );
 
     return accountClient.post(`/token`,params)
@@ -49,7 +53,7 @@ const accountClient = axios.create({
 const apiClient = axios.create({
     baseURL: 'https://api.spotify.com/v1/',
     timeout: 1000,
-    ...( checkSession && { headers: {'Authorization': `Bearer ${getFromUser('access_token')}`} })
+    ...( checkSession && { headers: {'Authorization': `Bearer ${getSession('access_token')}`} })
   });
 
 
@@ -57,6 +61,7 @@ export {
     setLocalJson,
     getLocalJson,
     checkSession,
+    getSession,
     clearSection,
     getToken,
     accountClient,
