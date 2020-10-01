@@ -1,0 +1,10 @@
+.me-container {
+    display: flex;
+    align-items: center;
+}
+
+.me-container .avatar {
+    max-width: 40px;
+    border-radius:50%;
+    margin-left:20px;
+}

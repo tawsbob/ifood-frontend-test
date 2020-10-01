@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from "react-router-dom";
-import { objectToQueryString, setLocalJson,getToken, apiClient, clearSection, getSession } from '../../helpers'
+import { getMe, objectToQueryString, setLocalJson,getToken, apiClient, clearSection, getSession } from '../../helpers'
 import AppContext from '../../context'
 
 var scopes = 'user-read-private user-read-email';
@@ -9,9 +9,21 @@ function ContextProvider({ children }) {
 
     //tudo que vamos usar
     let history = useHistory();
+    const [ me, setMe ] = useState( getMe() )
     const [ session, setSession ] = useState( getSession() )
     const [ state, setState ] = useState({ loading: true, playlists: null, filters: null, focusedList: null })
     const [ filters, setFilters ] = useState({ })
+
+    function fetchMe(){
+        apiClient()
+            .get('/me')
+            .then(({ data })=>{
+                if(data){
+                    setMe(data)
+                }
+            })
+            .catch(console.log)
+    }
 
     //Login no estilo redirect
     function login() {
@@ -30,7 +42,7 @@ function ContextProvider({ children }) {
     },[history])
 
     //ficou complexo
-    const getLists = useCallback(()=>{
+    const fetchLists = useCallback(()=>{
         const url = `/browse/featured-playlists${objectToQueryString( filters )}`
         apiClient()
             .get(url)
@@ -72,17 +84,22 @@ function ContextProvider({ children }) {
     
 
     useEffect(()=>{
+
+        if(!me){
+            fetchMe()
+        }
+
         if(!state.playlists && session){
             console.log('getList')
-            getLists()
+            fetchLists()
         }
-    }, [getLists, session, state.loading, state.playlists])
+    }, [fetchLists, me, session, state.loading, state.playlists])
 
 
     console.log(state, session)
 
   return (
-    <AppContext.Provider value={{ state, filters, setFilters, session, setSession, logout, login, setState, getLists }}>
+    <AppContext.Provider value={{ me, state, filters, setFilters, session, setSession, logout, login, setState, fetchLists }}>
          { children }
     </AppContext.Provider>
   );

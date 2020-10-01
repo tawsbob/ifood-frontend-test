@@ -1,11 +1,8 @@
 import React, { useContext, useEffect, useState} from 'react';
+import { getSrc } from '../../helpers'
 import AppContext from '../../context';
 import loading from './loading.svg'
 import './index.css';
-
-function getSrc(p){
-  return p.images[0] ? p.images[0].url : 'http://placekitten.com/200/200'
-}
 
 function click(p){
   return ()=>{

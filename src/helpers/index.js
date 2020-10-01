@@ -28,6 +28,10 @@ function getSession(key){
     
 }
 
+function getMe(key){
+    return getLocalJson('me')
+}
+
 function clearSection(){
     localStorage.removeItem(sectionKey)
 }
@@ -63,6 +67,10 @@ function objectToQueryString(obj){
 
 }
 
+function getSrc(p){
+    return p.images[0] ? p.images[0].url : 'http://placekitten.com/200/200'
+  }
+
 const accountClient = ()=>(axios.create({
     baseURL: 'https://accounts.spotify.com/api/',
     timeout: 1000,
@@ -80,10 +88,12 @@ const apiClient = ()=>(axios.create({
 
 
 export {
+    getSrc,
     setLocalJson,
     getLocalJson,
     checkSession,
     getSession,
+    getMe,
     clearSection,
     getToken,
     objectToQueryString,
