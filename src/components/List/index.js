@@ -31,7 +31,6 @@ function renderPlaylist() {
 }
 
 function List() {
-  
   const Context = useContext(AppContext)
 
   /*const onScroll = useCallback((e)=>{
@@ -45,19 +44,21 @@ function List() {
   },[])*/
 
   useEffect(() => {
-      console.log('add')
-      //window.addEventListener('scroll', onScroll)
+    console.log('add')
+    //window.addEventListener('scroll', onScroll)
   }, [])
 
-  
   const statePlaylist = Context.state.playlists ? Context.state.playlists.items : emptyArray
-  const playlists = Context.state.filteredLists ? Context.state.filteredLists :  statePlaylist
+  const playlists = Context.state.filteredLists ? Context.state.filteredLists : statePlaylist
 
   return (
     <div className="list-component">
-      { Context.state.playlists &&
-        playlists.map(renderPlaylist(Context))}
-      {Context.state.loading && <img className="loading" src={loading} alt="carregando..." />}
+      <div className="grid">
+        {Context.state.playlists && playlists.map(renderPlaylist(Context))}
+        {Context.state.loading && <img className="loading" src={loading} alt="carregando..." />}
+      </div>
+      { (!Context.state.filteredLists && !Context.state.loading) && (<button className="button primary load-more" onClick={Context.paginate}>Carregar mais</button>) }
+      { (!playlists.length && !Context.state.loading) && ( <h4>Nenhum resultado foi encontrado</h4>)  }
     </div>
   )
 }

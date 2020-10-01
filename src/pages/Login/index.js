@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { setLocalJson, getToken } from '../../helpers'
 import AppContext from '../../context'
@@ -10,10 +10,12 @@ function Login() {
   const Context = useContext(AppContext)
   let history = useHistory()
 
+  const [ loading, setLoading ] = useState(false)
+
   useEffect(() => {
-    if (/code=(.+)/.test(window.location.search)) {
+    if (/code=(.+)/.test(window.location.search) && !loading) {
       const code = window.location.search.replace('?code=', '')
-      console.log(code)
+      setLoading(true)
       if (code) {
         getToken({
           grant_type: 'authorization_code',
@@ -24,16 +26,16 @@ function Login() {
             //salva no localStorage e atualiza o context
             setLocalJson({ key: 'section', data })
             Context.setSession(data)
-
             history.push('/')
           })
           .catch((e) => {
             console.error(e)
+            setLoading(false)
             alert('Algo deu errado, tente novamente')
           })
       }
     }
-  })
+  }, [Context, history, loading])
 
   return (
     <div className="login-container">
