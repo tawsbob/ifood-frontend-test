@@ -9,7 +9,7 @@ import {
   Route
 } from "react-router-dom";
 
-const WithContext = ( Comp, path )=> {
+const WithRoute = ( Comp, path )=> {
   return (
       <Route exact path={path}>
           <Comp />
@@ -21,8 +21,8 @@ function App() {
       <Router>
         <Switch>
           <AppContextProvider>
-            { WithContext(Home, '/') }
-            { WithContext(Login, '/Login') }
+            { WithRoute(Home, '/') }
+            { WithRoute(Login, '/Login') }
           </AppContextProvider>
         </Switch>
       </Router>

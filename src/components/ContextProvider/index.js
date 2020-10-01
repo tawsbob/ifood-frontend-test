@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from "react-router-dom";
-import { getMe, objectToQueryString, setLocalJson,getToken, apiClient, clearSection, getSession } from '../../helpers'
+import { getMe, objectToQueryString, apiClient, clearSection, getSession } from '../../helpers'
 import AppContext from '../../context'
 
 var scopes = 'user-read-private user-read-email';
@@ -14,24 +14,6 @@ function ContextProvider({ children }) {
     const [ state, setState ] = useState({ loading: true, playlists: null, filters: null, focusedList: null })
     const [ filters, setFilters ] = useState({ })
 
-    function fetchMe(){
-        apiClient()
-            .get('/me')
-            .then(({ data })=>{
-                if(data){
-                    setMe(data)
-                }
-            })
-            .catch(console.log)
-    }
-
-    //Login no estilo redirect
-    function login() {
-        const { REACT_APP_HOST, REACT_APP_SPOTIFY_APP_ID } = process.env
-        const loginUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${REACT_APP_SPOTIFY_APP_ID}&scope=${encodeURIComponent(scopes)}&redirect_uri=${encodeURIComponent(REACT_APP_HOST)}`
-        window.location.href = loginUrl;
-    }
-
     const logout = useCallback(()=>{
         //limpa do localstorage
         clearSection()
@@ -41,10 +23,28 @@ function ContextProvider({ children }) {
         history.push('/login')
     },[history])
 
+    const fetchMe = useCallback(()=>{
+        apiClient({ session, setSession, logout })
+            .get('/me')
+            .then(({ data })=>{
+                if(data){
+                    setMe(data)
+                }
+            })
+    }, [logout, session])
+
+    //Login no estilo redirect
+    function login() {
+        const { REACT_APP_HOST, REACT_APP_SPOTIFY_APP_ID } = process.env
+        const loginUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${REACT_APP_SPOTIFY_APP_ID}&scope=${encodeURIComponent(scopes)}&redirect_uri=${encodeURIComponent(REACT_APP_HOST)}`
+        window.location.href = loginUrl;
+    }
+
     //ficou complexo
     const fetchLists = useCallback(()=>{
         const url = `/browse/featured-playlists${objectToQueryString( filters )}`
-        apiClient()
+        
+        apiClient({ session, setSession, logout })
             .get(url)
             .then(({ data })=>{
                 if(data){
@@ -53,33 +53,7 @@ function ContextProvider({ children }) {
                     setFilters({ limit, offset  })
                 }
             })
-            .catch((err)=>{
-
-                console.log(err)
-
-                setState({ loading: false})
-     
-                if(err && err.message === 'Request failed with status code 401'){
-                    console.log(session)
-                    if(session){
-                        const { refresh_token } = session
-                        getToken({ 
-                            grant_type: 'refresh_token',
-                            refresh_token  
-                       })
-                           .then((response)=>{
-                               setLocalJson({ key: 'section', data: response.data })
-                               setSession(response.data)
-                           })
-                           .catch((e)=>{
-                               console.log(e)
-                               logout()
-                           })
-                    } else {
-                        logout()
-                    }                        
-                }
-            })
+            
     }, [filters, logout, session])
     
 
@@ -93,7 +67,7 @@ function ContextProvider({ children }) {
             console.log('getList')
             fetchLists()
         }
-    }, [fetchLists, me, session, state.loading, state.playlists])
+    }, [fetchLists, fetchMe, me, session, state.loading, state.playlists])
 
 
     console.log(state, session)

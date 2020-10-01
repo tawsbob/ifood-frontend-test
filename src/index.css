@@ -5,14 +5,14 @@
 html, body {
   margin:0;
   padding: 0;
-  background-color:#000;
+  background-color:#171717;
   color:#fff;
   font-family: 'Raleway', sans-serif;
   font-size:15px;
 }
 
 .wrapper {
-  max-width: 1200px;
+  max-width: 1260px;
   padding:0 20px;
   margin:0 auto;
   position: relative;

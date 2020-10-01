@@ -80,11 +80,46 @@ const accountClient = ()=>(axios.create({
     }
   }));
 
-const apiClient = ()=>(axios.create({
-    baseURL: 'https://api.spotify.com/v1/',
-    timeout: 1000,
-    ...( checkSession && { headers: {'Authorization': `Bearer ${getSession('access_token')}`} })
-  }));
+const apiClient = ({ session, setSession, logout })=>{
+    console.log(
+        session, setSession, logout
+    )
+    const instance = axios.create({
+        baseURL: 'https://api.spotify.com/v1/',
+        timeout: 1000,
+        ...( checkSession && { headers: {'Authorization': `Bearer ${getSession('access_token')}`} })
+      });
+      instance.interceptors.response.use((response)=>{
+        console.log('response',response)
+        return response;
+      }, (error)=>{
+        
+        if(error && error.message === 'Request failed with status code 401'){
+            if(session){
+                const { refresh_token } = session
+                getToken({ 
+                    grant_type: 'refresh_token',
+                    refresh_token  
+               })
+                   .then((response)=>{
+                       setLocalJson({ key: 'section', data: response.data })
+                       setSession(response.data)
+                   })
+                   .catch((e)=>{
+                       console.log(e)
+                       logout()
+                   })
+            } else {
+                console.log('logout interceptor request')
+                logout()
+            }                        
+        }
+
+        return Promise.reject(error);
+      });
+
+      return instance
+}
 
 
 export {

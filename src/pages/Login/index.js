@@ -40,7 +40,7 @@ function Login() {
   return (
     <div className="login-container">
         <img className="logo" src={Logo} alt="Playlists Insanas" />
-        <h1>Login</h1>
+        <h1 className="title">Login</h1>
         <p>Faça o login para ter acesso as playlists mais sinistras do mundo, não perca tempo!</p>
         <button className="button primary" onClick={Context.login}>Quero ouvir as melhores músicas</button>
     </div>

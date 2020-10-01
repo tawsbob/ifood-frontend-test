@@ -15,9 +15,9 @@ function click(p){
 }
 
 function renderPlaylist(context){
-
+  //onFocus={()=>{ context.setState({ focusedList: p }) }}
   return (p, index)=>(
-    <div className="playlist" key={p.id}  tabIndex={index} role="button" onClick={click(p)} onFocus={()=>{ context.setState({ focusedList: p }) }}>
+    <div className="playlist" key={p.id}  tabIndex={index} role="button" onClick={click(p)} >
       <img className="thumb" loading="lazy" src={ getSrc(p) } alt={p.name} />
       
       <div className="content">
