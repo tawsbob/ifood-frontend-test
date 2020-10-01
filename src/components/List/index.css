@@ -1,6 +1,7 @@
 .list-component {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .playlist {
@@ -42,4 +43,9 @@
 
 .playlist .content p {
     margin:0;
+}
+
+.playlist:focus {
+    outline: 3px solid var(--main-color);
+    z-index: 1;
 }

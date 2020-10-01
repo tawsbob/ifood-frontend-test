@@ -1,47 +1,88 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from "react-router-dom";
-import { apiClient, clearSection, getSession } from '../../helpers'
+import { objectToQueryString, setLocalJson,getToken, apiClient, clearSection, getSession } from '../../helpers'
 import AppContext from '../../context'
 
 var scopes = 'user-read-private user-read-email';
 
 function ContextProvider({ children }) {
 
+    //tudo que vamos usar
     let history = useHistory();
-
     const [ session, setSession ] = useState( getSession() )
-    const [ state, setState ] = useState({ loading: true, playlists: null })
+    const [ state, setState ] = useState({ loading: true, playlists: null, filters: null, focusedList: null })
+    const [ filters, setFilters ] = useState({ })
 
+    //Login no estilo redirect
     function login() {
         const { REACT_APP_HOST, REACT_APP_SPOTIFY_APP_ID } = process.env
         const loginUrl = `https://accounts.spotify.com/authorize?response_type=code&client_id=${REACT_APP_SPOTIFY_APP_ID}&scope=${encodeURIComponent(scopes)}&redirect_uri=${encodeURIComponent(REACT_APP_HOST)}`
         window.location.href = loginUrl;
     }
 
-    function logout(){
+    const logout = useCallback(()=>{
+        //limpa do localstorage
         clearSection()
+        //atualiza o estado
         setSession(null)
+        //fé em deus que ele é justo irmão nunca se esqueça
         history.push('/login')
-    }
+    },[history])
 
-    function getLists(){
-
-        apiClient
-            .get('/browse/featured-playlists')
+    //ficou complexo
+    const getLists = useCallback(()=>{
+        const url = `/browse/featured-playlists${objectToQueryString( filters )}`
+        apiClient()
+            .get(url)
             .then(({ data })=>{
-                console.log(data)
-                   setState({ loading: false, playlists: data.playlists })
+                if(data){
+                    const { limit, offset } = data.playlists
+                    setState({ loading: false, playlists: data.playlists })
+                    setFilters({ limit, offset  })
+                }
             })
-    }
-    
-    useEffect(()=>{
-        getLists()
-    }, [ state.loading ])
+            .catch((err)=>{
 
-    console.log(state)
+                console.log(err)
+
+                setState({ loading: false})
+     
+                if(err && err.message === 'Request failed with status code 401'){
+                    console.log(session)
+                    if(session){
+                        const { refresh_token } = session
+                        getToken({ 
+                            grant_type: 'refresh_token',
+                            refresh_token  
+                       })
+                           .then((response)=>{
+                               setLocalJson({ key: 'section', data: response.data })
+                               setSession(response.data)
+                           })
+                           .catch((e)=>{
+                               console.log(e)
+                               logout()
+                           })
+                    } else {
+                        logout()
+                    }                        
+                }
+            })
+    }, [filters, logout, session])
+    
+
+    useEffect(()=>{
+        if(!state.playlists && session){
+            console.log('getList')
+            getLists()
+        }
+    }, [getLists, session, state.loading, state.playlists])
+
+
+    console.log(state, session)
 
   return (
-    <AppContext.Provider value={{ state, session, logout, login, setState, getLists }}>
+    <AppContext.Provider value={{ state, filters, setFilters, session, setSession, logout, login, setState, getLists }}>
          { children }
     </AppContext.Provider>
   );

@@ -7,5 +7,6 @@ export default createContext({
     login: ()=>(null),
     logout: ()=>(null),
     setState: ()=>{},
+    setSession: ()=>{},
     getLists: ()=>{}
 })

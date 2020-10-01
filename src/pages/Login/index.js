@@ -14,10 +14,19 @@ function Login() {
     useEffect(() => {
         if( /code=(.+)/.test(window.location.search)){
             const code = window.location.search.replace('?code=', '')
+            console.log(code)
             if(code){
-                getToken(code)
+                getToken({
+                        grant_type: 'authorization_code',
+                        code
+                    })
                     .then((response)=>{
-                        setLocalJson({ key: 'section', data: { code, ...response.data } })
+
+                        const data = { code, ...response.data }
+                        //salva no localStorage e atualiza o context
+                        setLocalJson({ key: 'section', data  })
+                        Context.setSession(data)
+
                         history.push('/')
                     })
                     .catch((e)=>{
