@@ -1,0 +1,13 @@
+.filter-container {
+    margin:40px 0;
+}
+.filter-container .input-search {
+    display: block;
+    width: 100%;
+    border:0;
+    box-sizing: border-box;
+}
+
+.filter-container .input-search:focus {
+    outline: 2px solid var(--main-color);
+}

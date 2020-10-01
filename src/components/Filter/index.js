@@ -1,20 +1,16 @@
-import React from 'react'
-//import axios from 'axios';
-//import './index.css';
+import React, { useContext } from 'react'
+import AppContext from '../../context'
+import './index.css';
 
-/*
-axios.get('/user?ID=12345')
-  .then(function (response) {
-    // handle success
-    console.log(response);
-  })
-  .catch(function (error) {
-    // handle error
-    console.log(error);
-  })
-*/
 function Filter() {
-  return <div className="list-component wrapper">Filter</div>
+
+  const Context = useContext(AppContext)
+
+  return (
+    <div className="filter-container">
+        <input type="text" className="input-search" placeholder="Pesquisar por nome" onKeyUp={Context.filterListByName} />
+    </div>
+  )
 }
 
 export default Filter
