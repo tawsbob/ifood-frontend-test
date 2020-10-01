@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 //import axios from 'axios';
 //import './index.css';
 
@@ -14,11 +14,7 @@ axios.get('/user?ID=12345')
   })
 */
 function Filter() {
-  return (
-    <div className="list-component wrapper">
-        Filter
-    </div>
-  );
+  return <div className="list-component wrapper">Filter</div>
 }
 
-export default Filter;
+export default Filter

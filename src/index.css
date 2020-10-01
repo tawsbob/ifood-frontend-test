@@ -1,38 +1,39 @@
 :root {
-  --main-color: #1ED760;
+  --main-color: #1ed760;
 }
 
-html, body {
-  margin:0;
+html,
+body {
+  margin: 0;
   padding: 0;
-  background-color:#171717;
-  color:#fff;
+  background-color: #171717;
+  color: #fff;
   font-family: 'Raleway', sans-serif;
-  font-size:15px;
+  font-size: 15px;
 }
 
 .wrapper {
   max-width: 1260px;
-  padding:0 20px;
-  margin:0 auto;
+  padding: 0 20px;
+  margin: 0 auto;
   position: relative;
 }
 
 button {
   cursor: pointer;
   font-weight: 500;
-  font-size:16px;
+  font-size: 16px;
   font-weight: 600;
 }
 
 .button {
-  padding:15px 25px;
-  border:0;
-  border-radius:8px;
+  padding: 15px 25px;
+  border: 0;
+  border-radius: 8px;
   text-transform: uppercase;
 }
 
 .button.primary {
-  background-color:var(--main-color);
-  color:#fff;
+  background-color: var(--main-color);
+  color: #fff;
 }

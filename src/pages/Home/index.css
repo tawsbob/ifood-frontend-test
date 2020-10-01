@@ -1,17 +1,17 @@
 .home-container {
-    margin-top: 40px;
+  margin-top: 40px;
 }
 .home-container .side-elements {
-    display: flex;
-    position: absolute;
-    top:0;
-    right:20px;
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 20px;
 }
 
 .home-container .logo {
-    width: 40px;
+  width: 40px;
 }
 
 .home-container .side-elements .button-logout {
-    margin-left:20px;
+  margin-left: 20px;
 }
