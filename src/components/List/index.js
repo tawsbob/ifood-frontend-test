@@ -57,8 +57,12 @@ function List() {
         {Context.state.playlists && playlists.map(renderPlaylist(Context))}
         {Context.state.loading && <img className="loading" src={loading} alt="carregando..." />}
       </div>
-      { (!Context.state.filteredLists && !Context.state.loading) && (<button className="button primary load-more" onClick={Context.paginate}>Carregar mais</button>) }
-      { (!playlists.length && !Context.state.loading) && ( <h4>Nenhum resultado foi encontrado</h4>)  }
+      {!Context.state.filteredLists && !Context.state.loading && (
+        <button className="button primary load-more" onClick={Context.paginate}>
+          Carregar mais
+        </button>
+      )}
+      {!playlists.length && !Context.state.loading && <h4>Nenhum resultado foi encontrado</h4>}
     </div>
   )
 }

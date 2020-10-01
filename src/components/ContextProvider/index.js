@@ -3,12 +3,12 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { axios, getMe, objectToQueryString, apiClient, clearSection, getSession } from '../../helpers'
 import AppContext from '../../context'
 
-var scopes = 'user-read-private user-read-email'
+var scopes = 'user-read-private user-read-email'  
 
 function ContextProvider({ children }) {
   //tudo que vamos usar
   let history = useHistory()
-  let location = useLocation();
+  let location = useLocation()
 
   const [me, setMe] = useState(getMe())
   const [loadingMe, setLoadingMe] = useState(false)
@@ -16,6 +16,7 @@ function ContextProvider({ children }) {
   const [state, setPlaylistState] = useState({
     loading: false,
     playlists: null,
+    filters: {},
     filteredLists: null,
     focusedList: null,
   })
@@ -23,6 +24,7 @@ function ContextProvider({ children }) {
   const [filtersConfigs, setFiltersConfigs] = useState(null)
   const [loadingFiltersConfig, setLoadingFiltersConfig] = useState(false)
 
+  const setFilter = (newState)=> setFilters({ ...filters, ...newState })
   const setState = useCallback((newState) => setPlaylistState({ ...state, ...newState }), [state])
 
   const filterListByName = (e) => {
@@ -34,6 +36,10 @@ function ContextProvider({ children }) {
     } else {
       setState({ filteredLists: null })
     }
+  }
+
+  const changeFilter = ({ id, value })=>{
+    setFilter({ [ id ]: value })
   }
 
   const logout = useCallback(() => {
@@ -79,7 +85,7 @@ function ContextProvider({ children }) {
 
   const fetchLists = useCallback(() => {
     console.log('fetchLists')
-    const url = `/browse/featured-playlists${objectToQueryString(filters)}`
+    const url = `/browse/featured-playlists${objectToQueryString(state.filters)}`
     console.log(url)
     setState({ loading: true })
     apiClient({ session, setSession, logout })
@@ -87,14 +93,21 @@ function ContextProvider({ children }) {
       .then(({ data }) => {
         if (data) {
           const { limit } = data.playlists
-          const playlists = !state.playlists ? data.playlists : { ...data.playlists, items: state.playlists.items.concat(data.playlists.items) }
+          const playlists = !state.playlists
+            ? data.playlists
+            : { ...data.playlists, items: state.playlists.items.concat(data.playlists.items) }
           const offset = playlists.items.length
 
           setState({ loading: false, playlists })
           setFilters({ limit, offset })
         }
       })
-  }, [filters, logout, session, setState, state.playlists])
+  }, [logout, session, setState, state.filters, state.playlists])
+
+  const setFiltersAndSearch = useCallback(()=>{
+    setState({ filters })
+    fetchLists()
+  }, [fetchLists, filters, setState])
 
   const paginate = () => {
     if (!state.loading) {
@@ -104,7 +117,7 @@ function ContextProvider({ children }) {
 
   useEffect(() => {
     //methodos que vão acontecer na home
-    if(location.pathname === '/'){
+    if (location.pathname === '/') {
       if (!me && !loadingMe) {
         fetchMe()
       }
@@ -117,7 +130,19 @@ function ContextProvider({ children }) {
         fetchLists()
       }
     }
-  }, [fetchFilterConfigs, fetchLists, fetchMe, filtersConfigs, loadingMe, loadingFiltersConfig, me, session, state.loading, state.playlists, location.pathname])
+  }, [
+    fetchFilterConfigs,
+    fetchLists,
+    fetchMe,
+    filtersConfigs,
+    loadingMe,
+    loadingFiltersConfig,
+    me,
+    session,
+    state.loading,
+    state.playlists,
+    location.pathname,
+  ])
 
   return (
     <AppContext.Provider
@@ -135,6 +160,8 @@ function ContextProvider({ children }) {
         fetchLists,
         paginate,
         filterListByName,
+        changeFilter,
+        setFiltersAndSearch
       }}
     >
       {children}

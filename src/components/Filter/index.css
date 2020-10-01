@@ -11,3 +11,10 @@
 .filter-container .input-search:focus {
   outline: 2px solid var(--main-color);
 }
+
+.filter-container .custom-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin:20px 0;
+}

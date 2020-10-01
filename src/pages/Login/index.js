@@ -10,7 +10,7 @@ function Login() {
   const Context = useContext(AppContext)
   let history = useHistory()
 
-  const [ loading, setLoading ] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (/code=(.+)/.test(window.location.search) && !loading) {
