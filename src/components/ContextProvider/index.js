@@ -93,14 +93,12 @@ function ContextProvider({ children }) {
       .get(url)
       .then(({ data }) => {
         if (data) {
-
           //preserva o estado anterior e addiciona os elementos novos
           const playlists = !state.playlists
             ? data.playlists
             : { ...data.playlists, items: state.playlists.items.concat(data.playlists.items) }
 
           setState({ loading: false, playlists })
-
         }
       })
   }, [logout, session, setState, state.filters, state.playlists])

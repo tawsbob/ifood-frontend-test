@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import AppContext from '../../context'
 import './index.css'
 
-function renderField({ id, name, validation, onChange}) {
+function renderField({ id, name, validation, onChange }) {
   switch (validation.primitiveType) {
     case 'STRING':
       return (
@@ -18,7 +18,15 @@ function renderField({ id, name, validation, onChange}) {
       return (
         <>
           <label>{name}</label>
-          <input type="number" name={name} max={max} min={min} onChange={(e)=>{  onChange({ name, id, value: parseInt(e.target.value) }) }} />
+          <input
+            type="number"
+            name={name}
+            max={max}
+            min={min}
+            onChange={(e) => {
+              onChange({ name, id, value: parseInt(e.target.value) })
+            }}
+          />
         </>
       )
     default:
@@ -30,8 +38,8 @@ function renderSelect({ name, values, id, onChange }) {
   return (
     <select
       onChange={(e) => {
-        const index = (e.target.selectedIndex - 1)
-        const value = values[index] ? values[index].value : null 
+        const index = e.target.selectedIndex - 1
+        const value = values[index] ? values[index].value : null
         onChange({ name, id, value })
       }}
     >

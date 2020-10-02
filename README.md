@@ -1,4 +1,4 @@
-# iFood Frontend Test 
+# iFood Frontend Test
 
 ## 1) Aponte um domínio para localhost
 
@@ -6,16 +6,6 @@ Edite seu hosts e aponte para um domínio de teste
 
 ```bash
     127.0.0.1 dev.app.com.br
-```
-
-## 2) Crie um .env
-
-Na variável REACT_APP_HOST coloque <seu_dominio>/login
-
-```bash
-    REACT_APP_SPOTIFY_APP_ID=<SEU_APP_ID>
-    REACT_APP_HOST=http://dev.app.com.br/login
-    REACT_APP_SPOTIFY_APP_SECRET=<SEU_APP_SECRET>
 ```
 
 ## 2) Crie um .env
