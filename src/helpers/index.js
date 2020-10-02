@@ -15,7 +15,7 @@ function getLocalJson(key) {
 function checkSession() {
   const userSection = getLocalJson(sectionKey)
   const hasCode = userSection && userSection.code && typeof userSection.code === 'string'
-  const hasToken = userSection && userSection.code && typeof userSection.code === 'string'
+  const hasToken = userSection && userSection.access_token && typeof userSection.access_token === 'string'
   return hasToken || hasCode
 }
 

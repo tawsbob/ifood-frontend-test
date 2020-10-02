@@ -3,7 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { axios, getMe, objectToQueryString, apiClient, clearSection, getSession } from '../../helpers'
 import AppContext from '../../context'
 
-var scopes = 'user-read-private user-read-email'  
+var scopes = 'user-read-private user-read-email'
 
 function ContextProvider({ children }) {
   //tudo que vamos usar
@@ -20,11 +20,11 @@ function ContextProvider({ children }) {
     filteredLists: null,
     focusedList: null,
   })
-  const [filters, setFilters] = useState({ limit: 4 })
+  const [filters, setFilters] = useState({ limit: 4, offset: 0 })
   const [filtersConfigs, setFiltersConfigs] = useState(null)
   const [loadingFiltersConfig, setLoadingFiltersConfig] = useState(false)
 
-  const setFilter = (newState)=> setFilters({ ...filters, ...newState })
+  const setFilter = (newState) => setFilters({ ...filters, ...newState })
   const setState = useCallback((newState) => setPlaylistState({ ...state, ...newState }), [state])
 
   const filterListByName = (e) => {
@@ -38,8 +38,9 @@ function ContextProvider({ children }) {
     }
   }
 
-  const changeFilter = ({ id, value })=>{
-    setFilter({ [ id ]: value })
+  const changeFilter = ({ id, value }) => {
+    console.log({ [id]: value })
+    setFilter({ [id]: value })
   }
 
   const logout = useCallback(() => {
@@ -92,22 +93,21 @@ function ContextProvider({ children }) {
       .get(url)
       .then(({ data }) => {
         if (data) {
-          const { limit } = data.playlists
+
+          //preserva o estado anterior e addiciona os elementos novos
           const playlists = !state.playlists
             ? data.playlists
             : { ...data.playlists, items: state.playlists.items.concat(data.playlists.items) }
-          const offset = playlists.items.length
 
           setState({ loading: false, playlists })
-          setFilters({ limit, offset })
+
         }
       })
   }, [logout, session, setState, state.filters, state.playlists])
 
-  const setFiltersAndSearch = useCallback(()=>{
-    setState({ filters })
-    fetchLists()
-  }, [fetchLists, filters, setState])
+  const setFiltersAndSearch = useCallback(() => {
+    setState({ filters, playlists: null })
+  }, [filters, setState])
 
   const paginate = () => {
     if (!state.loading) {
@@ -144,6 +144,8 @@ function ContextProvider({ children }) {
     location.pathname,
   ])
 
+  console.log(filters)
+
   return (
     <AppContext.Provider
       value={{
@@ -161,7 +163,7 @@ function ContextProvider({ children }) {
         paginate,
         filterListByName,
         changeFilter,
-        setFiltersAndSearch
+        setFiltersAndSearch,
       }}
     >
       {children}

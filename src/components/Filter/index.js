@@ -8,17 +8,14 @@ function Filter() {
   return (
     <div className="filter-container">
       <input type="text" className="input-search" placeholder="Pesquisar por nome" onKeyUp={Context.filterListByName} />
-      {
-        Context.filtersConfigs && (
-          <div className="custom-filters">
-          {
-            Context.filtersConfigs && 
-            Context.filtersConfigs.map((props)=>(<Field key={props.id} {...props} />))
-          }
-          <button className="button primary" onClick={Context.setFiltersAndSearch}>Filtrar</button>
+      {Context.filtersConfigs && (
+        <div className="custom-filters">
+          {Context.filtersConfigs && Context.filtersConfigs.map((props) => <Field key={props.id} {...props} />)}
+          <button className="button primary" onClick={Context.setFiltersAndSearch}>
+            Filtrar
+          </button>
         </div>
-        )
-      }
+      )}
     </div>
   )
 }

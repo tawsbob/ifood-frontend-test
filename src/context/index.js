@@ -13,6 +13,6 @@ export default createContext({
   getLists: () => {},
   paginate: () => {},
   filterListByName: () => {},
-  changeFilter: ()=>{},
-  setFiltersAndSearch: ()=>{}
+  changeFilter: () => {},
+  setFiltersAndSearch: () => {},
 })
